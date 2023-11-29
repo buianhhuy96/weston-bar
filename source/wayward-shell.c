@@ -1455,14 +1455,20 @@ static struct panel_launcher *panel_add_launcher(struct panel *panel, const char
 	{
 		printf("Launcher initial X is %d \n", initial_x);
 		launcher->initial_x = initial_x;
+		launcher->offset_right = 0;
+		if (initial_x == 1)
+		{
+
+			launcher->offset_right = 1;
+		}
 	}
 	else
 	{
 		launcher->initial_x = 0;
+		launcher->offset_right = 0;
 	}
 
 	launcher->toggled = 0;
-	launcher->offset_right = 0;
 
 	launcher->function = NULL;
 	if (function)
@@ -3330,17 +3336,17 @@ panel_add_launchers(struct panel *panel, struct desktop *desktop)
 	strcat(default_icon_path, "/system-reboot-symbolic.svg");
 	panel_add_launcher(panel,
 					   default_icon_path,
-					   "/run/wrappers/bin/sudo reboot",
-					   0,
-					   dummy_func);
+					   "/run/wrappers/bin/sudo shutdown -r now",
+					   1,
+					   NULL);
 
 	strcpy(default_icon_path, default_icon);
 	strcat(default_icon_path, "/system-shutdown-symbolic.svg");
 	panel_add_launcher(panel,
 					   default_icon_path,
-					   "/run/wrappers/bin/sudo poweroff",
-					   0,
-					   dummy_func);
+					   "/run/wrappers/bin/sudo shutdown -h now",
+					   1,
+					   NULL);
 
 	/*
 
