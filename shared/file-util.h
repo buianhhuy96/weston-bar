@@ -26,20 +26,21 @@
 #ifndef WESTON_FILE_UTIL_H
 #define WESTON_FILE_UTIL_H
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include <stdio.h>
 
-FILE *
-file_create_dated(const char *path, const char *prefix, const char *suffix,
-		  char *name_out, size_t name_len);
+	FILE *
+	file_create_dated(const char *path, const char *prefix, const char *suffix,
+					  char *name_out, size_t name_len);
 
-char *
-file_name_with_datadir(const char *);
+	char *
+	file_name_with_datadir(const char *);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

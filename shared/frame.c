@@ -36,7 +36,8 @@
 #include "cairo-util.h"
 #include "shared/file-util.h"
 
-enum frame_button_flags {
+enum frame_button_flags
+{
 	FRAME_BUTTON_ALIGN_RIGHT = 0x1,
 	FRAME_BUTTON_DECORATED = 0x2,
 	FRAME_BUTTON_CLICK_DOWN = 0x4,
@@ -45,16 +46,18 @@ enum frame_button_flags {
 #define FRAME_BUTTON_RIGHT_MARGIN 3
 #define FRAME_BUTTON_TOP_MARGIN 5
 
-struct frame_button {
+struct frame_button
+{
 	struct frame *frame;
-	struct wl_list link;	/* buttons_list */
+	struct wl_list link; /* buttons_list */
 
 	cairo_surface_t *icon;
 	enum frame_button_flags flags;
 	int hover_count;
 	int press_count;
 
-	struct {
+	struct
+	{
 		int x, y;
 		int width, height;
 	} allocation;
@@ -62,14 +65,16 @@ struct frame_button {
 	enum frame_status status_effect;
 };
 
-struct frame_pointer_button {
+struct frame_pointer_button
+{
 	struct wl_list link;
 	uint32_t button;
 	enum theme_location press_location;
 	struct frame_button *frame_button;
 };
 
-struct frame_pointer {
+struct frame_pointer
+{
 	struct wl_list link;
 	void *data;
 
@@ -79,7 +84,8 @@ struct frame_pointer {
 	struct wl_list down_buttons;
 };
 
-struct frame_touch {
+struct frame_touch
+{
 	struct wl_list link;
 	void *data;
 
@@ -88,13 +94,15 @@ struct frame_touch {
 	struct frame_button *button;
 };
 
-struct frame {
+struct frame
+{
 	int32_t width, height;
 	char *title;
 	uint32_t flags;
 	struct theme *theme;
 
-	struct {
+	struct
+	{
 		int32_t x, y;
 		int32_t width, height;
 	} interior;
@@ -113,8 +121,8 @@ struct frame {
 
 static struct frame_button *
 frame_button_create_from_surface(struct frame *frame, cairo_surface_t *icon,
-                                 enum frame_status status_effect,
-                                 enum frame_button_flags flags)
+								 enum frame_status status_effect,
+								 enum frame_button_flags flags)
 {
 	struct frame_button *button;
 
@@ -134,8 +142,8 @@ frame_button_create_from_surface(struct frame *frame, cairo_surface_t *icon,
 
 static struct frame_button *
 frame_button_create(struct frame *frame, const char *icon_name,
-                    enum frame_status status_effect,
-                    enum frame_button_flags flags)
+					enum frame_status status_effect,
+					enum frame_button_flags flags)
 {
 	struct frame_button *button;
 	cairo_surface_t *icon;
@@ -145,7 +153,7 @@ frame_button_create(struct frame *frame, const char *icon_name,
 		goto error;
 
 	button = frame_button_create_from_surface(frame, icon, status_effect,
-	                                          flags);
+											  flags);
 	if (!button)
 		goto error;
 
@@ -226,7 +234,8 @@ frame_button_repaint(struct frame_button *button, cairo_t *cr)
 
 	cairo_save(cr);
 
-	if (button->flags & FRAME_BUTTON_DECORATED) {
+	if (button->flags & FRAME_BUTTON_DECORATED)
+	{
 		cairo_set_line_width(cr, 1);
 
 		cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
@@ -234,15 +243,20 @@ frame_button_repaint(struct frame_button *button, cairo_t *cr)
 
 		cairo_stroke_preserve(cr);
 
-		if (button->press_count) {
+		if (button->press_count)
+		{
 			cairo_set_source_rgb(cr, 0.7, 0.7, 0.7);
-		} else if (button->hover_count) {
+		}
+		else if (button->hover_count)
+		{
 			cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-		} else {
+		}
+		else
+		{
 			cairo_set_source_rgb(cr, 0.88, 0.88, 0.88);
 		}
 
-		cairo_fill (cr);
+		cairo_fill(cr);
 
 		x += 4;
 	}
@@ -258,9 +272,7 @@ frame_pointer_get(struct frame *frame, void *data)
 {
 	struct frame_pointer *pointer;
 
-	wl_list_for_each(pointer, &frame->pointers, link)
-		if (pointer->data == data)
-			return pointer;
+	wl_list_for_each(pointer, &frame->pointers, link) if (pointer->data == data) return pointer;
 
 	pointer = calloc(1, sizeof *pointer);
 	if (!pointer)
@@ -285,9 +297,7 @@ frame_touch_get(struct frame *frame, void *data)
 {
 	struct frame_touch *touch;
 
-	wl_list_for_each(touch, &frame->touches, link)
-		if (touch->data == data)
-			return touch;
+	wl_list_for_each(touch, &frame->touches, link) if (touch->data == data) return touch;
 
 	touch = calloc(1, sizeof *touch);
 	if (!touch)
@@ -306,8 +316,7 @@ frame_touch_destroy(struct frame_touch *touch)
 	free(touch);
 }
 
-void
-frame_destroy(struct frame *frame)
+void frame_destroy(struct frame *frame)
 {
 	struct frame_button *button, *next;
 	struct frame_touch *touch, *next_touch;
@@ -328,7 +337,7 @@ frame_destroy(struct frame *frame)
 
 struct frame *
 frame_create(struct theme *t, int32_t width, int32_t height, uint32_t buttons,
-             const char *title, cairo_surface_t *icon)
+			 const char *title, cairo_surface_t *icon)
 {
 	struct frame *frame;
 	struct frame_button *button;
@@ -348,77 +357,85 @@ frame_create(struct theme *t, int32_t width, int32_t height, uint32_t buttons,
 	wl_list_init(&frame->pointers);
 	wl_list_init(&frame->touches);
 
-	if (title) {
+	if (title)
+	{
 		frame->title = strdup(title);
 		if (!frame->title)
 			goto free_frame;
 	}
 
-	if (title) {
-		if (icon) {
+	if (title)
+	{
+		if (icon)
+		{
 			button = frame_button_create_from_surface(frame,
-			                                          icon,
-			                                          FRAME_STATUS_MENU,
-			                                          FRAME_BUTTON_CLICK_DOWN);
-		} else {
+													  icon,
+													  FRAME_STATUS_MENU,
+													  FRAME_BUTTON_CLICK_DOWN);
+		}
+		else
+		{
 			char *name = file_name_with_datadir("icon_window.png");
 
 			if (!name)
 				goto free_frame;
 
 			button = frame_button_create(frame,
-			                             name,
-			                             FRAME_STATUS_MENU,
-			                             FRAME_BUTTON_CLICK_DOWN);
+										 name,
+										 FRAME_STATUS_MENU,
+										 FRAME_BUTTON_CLICK_DOWN);
 			free(name);
 		}
 		if (!button)
 			goto free_frame;
 	}
 
-	if (buttons & FRAME_BUTTON_CLOSE) {
+	if (buttons & FRAME_BUTTON_CLOSE)
+	{
 		char *name = file_name_with_datadir("sign_close.png");
 
 		if (!name)
 			goto free_frame;
 
 		button = frame_button_create(frame,
-					     name,
-					     FRAME_STATUS_CLOSE,
-					     FRAME_BUTTON_ALIGN_RIGHT |
-					     FRAME_BUTTON_DECORATED);
+									 name,
+									 FRAME_STATUS_CLOSE,
+									 FRAME_BUTTON_ALIGN_RIGHT |
+										 FRAME_BUTTON_DECORATED);
 		free(name);
 		if (!button)
 			goto free_frame;
 	}
 
-	if (buttons & FRAME_BUTTON_MAXIMIZE) {
+	if (buttons & FRAME_BUTTON_MAXIMIZE)
+	{
 		char *name = file_name_with_datadir("sign_maximize.png");
 
 		if (!name)
 			goto free_frame;
 
 		button = frame_button_create(frame,
-					     name,
-					     FRAME_STATUS_MAXIMIZE,
-					     FRAME_BUTTON_ALIGN_RIGHT |
-					     FRAME_BUTTON_DECORATED);
+									 name,
+									 FRAME_STATUS_MAXIMIZE,
+									 FRAME_BUTTON_ALIGN_RIGHT |
+										 FRAME_BUTTON_DECORATED);
 		free(name);
 		if (!button)
 			goto free_frame;
 	}
 
-	if (buttons & FRAME_BUTTON_MINIMIZE) {
+	if (buttons & FRAME_BUTTON_MINIMIZE)
+	{
 		char *name = file_name_with_datadir("sign_minimize.png");
 
 		if (!name)
 			goto free_frame;
 
 		button = frame_button_create(frame,
-					     name,
-					     FRAME_STATUS_MINIMIZE,
-					     FRAME_BUTTON_ALIGN_RIGHT |
-					     FRAME_BUTTON_DECORATED);
+									 name,
+									 FRAME_STATUS_MINIMIZE,
+									 FRAME_BUTTON_ALIGN_RIGHT |
+										 FRAME_BUTTON_DECORATED);
 		free(name);
 		if (!button)
 			goto free_frame;
@@ -431,12 +448,12 @@ free_frame:
 	return NULL;
 }
 
-int
-frame_set_title(struct frame *frame, const char *title)
+int frame_set_title(struct frame *frame, const char *title)
 {
 	char *dup = NULL;
 
-	if (title) {
+	if (title)
+	{
 		dup = strdup(title);
 		if (!dup)
 			return -1;
@@ -451,11 +468,11 @@ frame_set_title(struct frame *frame, const char *title)
 	return 0;
 }
 
-void
-frame_set_icon(struct frame *frame, cairo_surface_t *icon)
+void frame_set_icon(struct frame *frame, cairo_surface_t *icon)
 {
 	struct frame_button *button;
-	wl_list_for_each(button, &frame->buttons, link) {
+	wl_list_for_each(button, &frame->buttons, link)
+	{
 		if (button->status_effect != FRAME_STATUS_MENU)
 			continue;
 		if (button->icon)
@@ -465,8 +482,7 @@ frame_set_icon(struct frame *frame, cairo_surface_t *icon)
 	}
 }
 
-void
-frame_set_flag(struct frame *frame, enum frame_flag flag)
+void frame_set_flag(struct frame *frame, enum frame_flag flag)
 {
 	if (flag & FRAME_FLAG_MAXIMIZED && !(frame->flags & FRAME_FLAG_MAXIMIZED))
 		frame->geometry_dirty = 1;
@@ -475,8 +491,7 @@ frame_set_flag(struct frame *frame, enum frame_flag flag)
 	frame->status |= FRAME_STATUS_REPAINT;
 }
 
-void
-frame_unset_flag(struct frame *frame, enum frame_flag flag)
+void frame_unset_flag(struct frame *frame, enum frame_flag flag)
 {
 	if (flag & FRAME_FLAG_MAXIMIZED && frame->flags & FRAME_FLAG_MAXIMIZED)
 		frame->geometry_dirty = 1;
@@ -485,8 +500,7 @@ frame_unset_flag(struct frame *frame, enum frame_flag flag)
 	frame->status |= FRAME_STATUS_REPAINT;
 }
 
-void
-frame_resize(struct frame *frame, int32_t width, int32_t height)
+void frame_resize(struct frame *frame, int32_t width, int32_t height)
 {
 	frame->width = width;
 	frame->height = height;
@@ -495,8 +509,7 @@ frame_resize(struct frame *frame, int32_t width, int32_t height)
 	frame->status |= FRAME_STATUS_REPAINT;
 }
 
-void
-frame_resize_inside(struct frame *frame, int32_t width, int32_t height)
+void frame_resize_inside(struct frame *frame, int32_t width, int32_t height)
 {
 	struct theme *t = frame->theme;
 	int decoration_width, decoration_height, titlebar_height;
@@ -506,17 +519,20 @@ frame_resize_inside(struct frame *frame, int32_t width, int32_t height)
 	else
 		titlebar_height = t->width;
 
-	if (frame->flags & FRAME_FLAG_MAXIMIZED) {
+	if (frame->flags & FRAME_FLAG_MAXIMIZED)
+	{
 		decoration_width = t->width * 2;
 		decoration_height = t->width + titlebar_height;
-	} else {
+	}
+	else
+	{
 		decoration_width = (t->width + t->margin) * 2;
 		decoration_height = t->width +
-			titlebar_height + t->margin * 2;
+							titlebar_height + t->margin * 2;
 	}
 
 	frame_resize(frame, width + decoration_width,
-		     height + decoration_height);
+				 height + decoration_height);
 }
 
 int32_t
@@ -547,7 +563,8 @@ frame_refresh_geometry(struct frame *frame)
 	else
 		titlebar_height = t->width;
 
-	if (frame->flags & FRAME_FLAG_MAXIMIZED) {
+	if (frame->flags & FRAME_FLAG_MAXIMIZED)
+	{
 		decoration_width = t->width * 2;
 		decoration_height = t->width + titlebar_height;
 
@@ -558,7 +575,9 @@ frame_refresh_geometry(struct frame *frame)
 
 		frame->opaque_margin = 0;
 		frame->shadow_margin = 0;
-	} else {
+	}
+	else
+	{
 		decoration_width = (t->width + t->margin) * 2;
 		decoration_height = t->width + titlebar_height + t->margin * 2;
 
@@ -574,7 +593,8 @@ frame_refresh_geometry(struct frame *frame)
 	x_r = frame->width - t->width - frame->shadow_margin - FRAME_BUTTON_RIGHT_MARGIN;
 	x_l = t->width + frame->shadow_margin;
 	y = t->width + frame->shadow_margin + FRAME_BUTTON_TOP_MARGIN;
-	wl_list_for_each(button, &frame->buttons, link) {
+	wl_list_for_each(button, &frame->buttons, link)
+	{
 		const int button_padding = 1;
 		w = cairo_image_surface_get_width(button->icon);
 		h = cairo_image_surface_get_height(button->icon);
@@ -582,7 +602,8 @@ frame_refresh_geometry(struct frame *frame)
 		if (button->flags & FRAME_BUTTON_DECORATED)
 			w += 10;
 
-		if (button->flags & FRAME_BUTTON_ALIGN_RIGHT) {
+		if (button->flags & FRAME_BUTTON_ALIGN_RIGHT)
+		{
 			x_r -= w;
 
 			button->allocation.x = x_r;
@@ -591,7 +612,9 @@ frame_refresh_geometry(struct frame *frame)
 			button->allocation.height = h + 1;
 
 			x_r -= button_padding;
-		} else {
+		}
+		else
+		{
 			button->allocation.x = x_l;
 			button->allocation.y = y;
 			button->allocation.width = w + 1;
@@ -610,9 +633,8 @@ frame_refresh_geometry(struct frame *frame)
 	frame->geometry_dirty = 0;
 }
 
-void
-frame_interior(struct frame *frame, int32_t *x, int32_t *y,
-		int32_t *width, int32_t *height)
+void frame_interior(struct frame *frame, int32_t *x, int32_t *y,
+					int32_t *width, int32_t *height)
 {
 	frame_refresh_geometry(frame);
 
@@ -626,9 +648,8 @@ frame_interior(struct frame *frame, int32_t *x, int32_t *y,
 		*height = frame->interior.height;
 }
 
-void
-frame_input_rect(struct frame *frame, int32_t *x, int32_t *y,
-		 int32_t *width, int32_t *height)
+void frame_input_rect(struct frame *frame, int32_t *x, int32_t *y,
+					  int32_t *width, int32_t *height)
 {
 	frame_refresh_geometry(frame);
 
@@ -642,9 +663,8 @@ frame_input_rect(struct frame *frame, int32_t *x, int32_t *y,
 		*height = frame->height - frame->shadow_margin * 2;
 }
 
-void
-frame_opaque_rect(struct frame *frame, int32_t *x, int32_t *y,
-		  int32_t *width, int32_t *height)
+void frame_opaque_rect(struct frame *frame, int32_t *x, int32_t *y,
+					   int32_t *width, int32_t *height)
 {
 	frame_refresh_geometry(frame);
 
@@ -658,8 +678,7 @@ frame_opaque_rect(struct frame *frame, int32_t *x, int32_t *y,
 		*height = frame->height - frame->opaque_margin * 2;
 }
 
-int
-frame_get_shadow_margin(struct frame *frame)
+int frame_get_shadow_margin(struct frame *frame)
 {
 	frame_refresh_geometry(frame);
 
@@ -672,8 +691,7 @@ frame_status(struct frame *frame)
 	return frame->status;
 }
 
-void
-frame_status_clear(struct frame *frame, enum frame_status status)
+void frame_status_clear(struct frame *frame, enum frame_status status)
 {
 	frame->status &= ~status;
 }
@@ -684,12 +702,13 @@ frame_find_button(struct frame *frame, int x, int y)
 	struct frame_button *button;
 	int rel_x, rel_y;
 
-	wl_list_for_each(button, &frame->buttons, link) {
+	wl_list_for_each(button, &frame->buttons, link)
+	{
 		rel_x = x - button->allocation.x;
 		rel_y = y - button->allocation.y;
 
 		if (0 <= rel_x && rel_x < button->allocation.width &&
-		    0 <= rel_y && rel_y < button->allocation.height)
+			0 <= rel_y && rel_y < button->allocation.height)
 			return button;
 	}
 
@@ -710,9 +729,8 @@ frame_pointer_motion(struct frame *frame, void *data, int x, int y)
 	enum theme_location location;
 
 	location = theme_get_location(frame->theme, x, y,
-				      frame->width, frame->height,
-				      frame->flags & FRAME_FLAG_MAXIMIZED ?
-				      THEME_FRAME_MAXIMIZED : 0);
+								  frame->width, frame->height,
+								  frame->flags & FRAME_FLAG_MAXIMIZED ? THEME_FRAME_MAXIMIZED : 0);
 	if (!pointer)
 		return location;
 
@@ -742,19 +760,25 @@ frame_pointer_button_destroy(struct frame_pointer_button *button)
 
 static void
 frame_pointer_button_press(struct frame *frame, struct frame_pointer *pointer,
-			   struct frame_pointer_button *button)
+						   struct frame_pointer_button *button)
 {
-	if (button->button == BTN_RIGHT) {
+	if (button->button == BTN_RIGHT)
+	{
 		if (button->press_location == THEME_LOCATION_TITLEBAR)
 			frame->status |= FRAME_STATUS_MENU;
 
 		frame_pointer_button_destroy(button);
-
-	} else if (button->button == BTN_LEFT) {
-		if (pointer->hover_button) {
+	}
+	else if (button->button == BTN_LEFT)
+	{
+		if (pointer->hover_button)
+		{
 			frame_button_press(pointer->hover_button);
-		} else {
-			switch (button->press_location) {
+		}
+		else
+		{
+			switch (button->press_location)
+			{
 			case THEME_LOCATION_TITLEBAR:
 				frame->status |= FRAME_STATUS_MOVE;
 
@@ -781,9 +805,10 @@ frame_pointer_button_press(struct frame *frame, struct frame_pointer *pointer,
 
 static void
 frame_pointer_button_release(struct frame *frame, struct frame_pointer *pointer,
-			     struct frame_pointer_button *button)
+							 struct frame_pointer_button *button)
 {
-	if (button->button == BTN_LEFT && button->frame_button) {
+	if (button->button == BTN_LEFT && button->frame_button)
+	{
 		if (button->frame_button == pointer->hover_button)
 			frame_button_release(button->frame_button);
 		else
@@ -793,14 +818,13 @@ frame_pointer_button_release(struct frame *frame, struct frame_pointer *pointer,
 
 static void
 frame_pointer_button_cancel(struct frame *frame, struct frame_pointer *pointer,
-			    struct frame_pointer_button *button)
+							struct frame_pointer_button *button)
 {
 	if (button->frame_button)
 		frame_button_cancel(button->frame_button);
 }
 
-void
-frame_pointer_leave(struct frame *frame, void *data)
+void frame_pointer_leave(struct frame *frame, void *data)
 {
 	struct frame_pointer *pointer = frame_pointer_get(frame, data);
 	struct frame_pointer_button *button, *next;
@@ -810,7 +834,8 @@ frame_pointer_leave(struct frame *frame, void *data)
 	if (pointer->hover_button)
 		frame_button_leave(pointer->hover_button, pointer);
 
-	wl_list_for_each_safe(button, next, &pointer->down_buttons, link) {
+	wl_list_for_each_safe(button, next, &pointer->down_buttons, link)
+	{
 		frame_pointer_button_cancel(frame, pointer, button);
 		frame_pointer_button_destroy(button);
 	}
@@ -820,7 +845,7 @@ frame_pointer_leave(struct frame *frame, void *data)
 
 enum theme_location
 frame_pointer_button(struct frame *frame, void *data,
-		     uint32_t btn, enum wl_pointer_button_state state)
+					 uint32_t btn, enum wl_pointer_button_state state)
 {
 	struct frame_pointer *pointer = frame_pointer_get(frame, data);
 	struct frame_pointer_button *button;
@@ -830,11 +855,11 @@ frame_pointer_button(struct frame *frame, void *data,
 		return location;
 
 	location = theme_get_location(frame->theme, pointer->x, pointer->y,
-				      frame->width, frame->height,
-				      frame->flags & FRAME_FLAG_MAXIMIZED ?
-				      THEME_FRAME_MAXIMIZED : 0);
+								  frame->width, frame->height,
+								  frame->flags & FRAME_FLAG_MAXIMIZED ? THEME_FRAME_MAXIMIZED : 0);
 
-	if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
+	if (state == WL_POINTER_BUTTON_STATE_PRESSED)
+	{
 		button = malloc(sizeof *button);
 		if (!button)
 			return location;
@@ -845,11 +870,11 @@ frame_pointer_button(struct frame *frame, void *data,
 		wl_list_insert(&pointer->down_buttons, &button->link);
 
 		frame_pointer_button_press(frame, pointer, button);
-	} else if (state == WL_POINTER_BUTTON_STATE_RELEASED) {
+	}
+	else if (state == WL_POINTER_BUTTON_STATE_RELEASED)
+	{
 		button = NULL;
-		wl_list_for_each(button, &pointer->down_buttons, link)
-			if (button->button == btn)
-				break;
+		wl_list_for_each(button, &pointer->down_buttons, link) if (button->button == btn) break;
 		/* Make sure we didn't hit the end */
 		if (&button->link == &pointer->down_buttons)
 			return location;
@@ -870,20 +895,21 @@ frame_touch_down(struct frame *frame, void *data, int32_t id, int x, int y)
 	enum theme_location location;
 
 	location = theme_get_location(frame->theme, x, y,
-				      frame->width, frame->height,
-				      frame->flags & FRAME_FLAG_MAXIMIZED ?
-				      THEME_FRAME_MAXIMIZED : 0);
+								  frame->width, frame->height,
+								  frame->flags & FRAME_FLAG_MAXIMIZED ? THEME_FRAME_MAXIMIZED : 0);
 
 	if (id > 0)
 		return location;
 
-	if (touch && button) {
+	if (touch && button)
+	{
 		touch->button = button;
 		frame_button_press(touch->button);
 		return location;
 	}
 
-	switch (location) {
+	switch (location)
+	{
 	case THEME_LOCATION_TITLEBAR:
 		frame->status |= FRAME_STATUS_MOVE;
 		break;
@@ -903,15 +929,15 @@ frame_touch_down(struct frame *frame, void *data, int32_t id, int x, int y)
 	return location;
 }
 
-void
-frame_touch_up(struct frame *frame, void *data, int32_t id)
+void frame_touch_up(struct frame *frame, void *data, int32_t id)
 {
 	struct frame_touch *touch = frame_touch_get(frame, data);
 
 	if (id > 0)
 		return;
 
-	if (touch && touch->button) {
+	if (touch && touch->button)
+	{
 		frame_button_release(touch->button);
 		frame_touch_destroy(touch);
 	}
@@ -919,28 +945,30 @@ frame_touch_up(struct frame *frame, void *data, int32_t id)
 
 enum theme_location
 frame_double_click(struct frame *frame, void *data,
-		   uint32_t btn, enum wl_pointer_button_state state)
+				   uint32_t btn, enum wl_pointer_button_state state)
 {
 	struct frame_pointer *pointer = frame_pointer_get(frame, data);
 	struct frame_button *button;
 	enum theme_location location = THEME_LOCATION_EXTERIOR;
 
 	location = theme_get_location(frame->theme, pointer->x, pointer->y,
-				      frame->width, frame->height,
-				      frame->flags & FRAME_FLAG_MAXIMIZED ?
-				      THEME_FRAME_MAXIMIZED : 0);
+								  frame->width, frame->height,
+								  frame->flags & FRAME_FLAG_MAXIMIZED ? THEME_FRAME_MAXIMIZED : 0);
 
 	button = frame_find_button(frame, pointer->x, pointer->y);
 
 	if (location != THEME_LOCATION_TITLEBAR || btn != BTN_LEFT)
 		return location;
 
-	if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
+	if (state == WL_POINTER_BUTTON_STATE_PRESSED)
+	{
 		if (button)
 			frame_button_press(button);
 		else
 			frame->status |= FRAME_STATUS_MAXIMIZE;
-	} else if (state == WL_POINTER_BUTTON_STATE_RELEASED) {
+	}
+	else if (state == WL_POINTER_BUTTON_STATE_RELEASED)
+	{
 		if (button)
 			frame_button_release(button);
 	}
@@ -948,26 +976,26 @@ frame_double_click(struct frame *frame, void *data,
 	return location;
 }
 
-void
-frame_double_touch_down(struct frame *frame, void *data, int32_t id,
-			int x, int y)
+void frame_double_touch_down(struct frame *frame, void *data, int32_t id,
+							 int x, int y)
 {
 	struct frame_touch *touch = frame_touch_get(frame, data);
 	struct frame_button *button = frame_find_button(frame, x, y);
 	enum theme_location location;
 
-	if (touch && button) {
+	if (touch && button)
+	{
 		touch->button = button;
 		frame_button_press(touch->button);
 		return;
 	}
 
 	location = theme_get_location(frame->theme, x, y,
-				      frame->width, frame->height,
-				      frame->flags & FRAME_FLAG_MAXIMIZED ?
-				      THEME_FRAME_MAXIMIZED : 0);
+								  frame->width, frame->height,
+								  frame->flags & FRAME_FLAG_MAXIMIZED ? THEME_FRAME_MAXIMIZED : 0);
 
-	switch (location) {
+	switch (location)
+	{
 	case THEME_LOCATION_TITLEBAR:
 		frame->status |= FRAME_STATUS_MAXIMIZE;
 		break;
@@ -986,19 +1014,18 @@ frame_double_touch_down(struct frame *frame, void *data, int32_t id,
 	}
 }
 
-void
-frame_double_touch_up(struct frame *frame, void *data, int32_t id)
+void frame_double_touch_up(struct frame *frame, void *data, int32_t id)
 {
 	struct frame_touch *touch = frame_touch_get(frame, data);
 
-	if (touch && touch->button) {
+	if (touch && touch->button)
+	{
 		frame_button_release(touch->button);
 		frame_touch_destroy(touch);
 	}
 }
 
-void
-frame_repaint(struct frame *frame, cairo_t *cr)
+void frame_repaint(struct frame *frame, cairo_t *cr)
 {
 	struct frame_button *button;
 	uint32_t flags = 0;
@@ -1013,8 +1040,8 @@ frame_repaint(struct frame *frame, cairo_t *cr)
 
 	cairo_save(cr);
 	theme_render_frame(frame->theme, cr, frame->width, frame->height,
-			   frame->title, &frame->title_rect,
-			   &frame->buttons, flags);
+					   frame->title, &frame->title_rect,
+					   &frame->buttons, flags);
 	cairo_restore(cr);
 
 	wl_list_for_each(button, &frame->buttons, link)

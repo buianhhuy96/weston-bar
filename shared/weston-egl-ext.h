@@ -39,8 +39,8 @@ struct wl_display;
 EGLAPI EGLBoolean EGLAPIENTRY eglBindWaylandDisplayWL(EGLDisplay dpy, struct wl_display *display);
 EGLAPI EGLBoolean EGLAPIENTRY eglUnbindWaylandDisplayWL(EGLDisplay dpy, struct wl_display *display);
 #endif
-typedef EGLBoolean (EGLAPIENTRYP PFNEGLBINDWAYLANDDISPLAYWL) (EGLDisplay dpy, struct wl_display *display);
-typedef EGLBoolean (EGLAPIENTRYP PFNEGLUNBINDWAYLANDDISPLAYWL) (EGLDisplay dpy, struct wl_display *display);
+typedef EGLBoolean(EGLAPIENTRYP PFNEGLBINDWAYLANDDISPLAYWL)(EGLDisplay dpy, struct wl_display *display);
+typedef EGLBoolean(EGLAPIENTRYP PFNEGLUNBINDWAYLANDDISPLAYWL)(EGLDisplay dpy, struct wl_display *display);
 #endif
 
 /*
@@ -56,47 +56,47 @@ typedef EGLBoolean (EGLAPIENTRYP PFNEGLUNBINDWAYLANDDISPLAYWL) (EGLDisplay dpy, 
  * Detect this, and provide our own definitions if necessary.
  */
 #ifndef EGL_WAYLAND_BUFFER_WL
-#define EGL_WAYLAND_BUFFER_WL		0x31D5 /* eglCreateImageKHR target */
-#define EGL_WAYLAND_PLANE_WL		0x31D6 /* eglCreateImageKHR target */
+#define EGL_WAYLAND_BUFFER_WL 0x31D5 /* eglCreateImageKHR target */
+#define EGL_WAYLAND_PLANE_WL 0x31D6  /* eglCreateImageKHR target */
 
-#define EGL_TEXTURE_Y_U_V_WL            0x31D7
-#define EGL_TEXTURE_Y_UV_WL             0x31D8
-#define EGL_TEXTURE_Y_XUXV_WL           0x31D9
-#define EGL_TEXTURE_EXTERNAL_WL         0x31DA
+#define EGL_TEXTURE_Y_U_V_WL 0x31D7
+#define EGL_TEXTURE_Y_UV_WL 0x31D8
+#define EGL_TEXTURE_Y_XUXV_WL 0x31D9
+#define EGL_TEXTURE_EXTERNAL_WL 0x31DA
 
 struct wl_resource;
 #ifdef EGL_EGLEXT_PROTOTYPES
 EGLAPI EGLBoolean EGLAPIENTRY eglQueryWaylandBufferWL(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 #endif
-typedef EGLBoolean (EGLAPIENTRYP PFNEGLQUERYWAYLANDBUFFERWL) (EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
+typedef EGLBoolean(EGLAPIENTRYP PFNEGLQUERYWAYLANDBUFFERWL)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 #endif
 
 #ifndef EGL_WL_create_wayland_buffer_from_image
 #define EGL_WL_create_wayland_buffer_from_image 1
 
 #ifdef EGL_EGLEXT_PROTOTYPES
-EGLAPI struct wl_buffer * EGLAPIENTRY eglCreateWaylandBufferFromImageWL(EGLDisplay dpy, EGLImageKHR image);
+EGLAPI struct wl_buffer *EGLAPIENTRY eglCreateWaylandBufferFromImageWL(EGLDisplay dpy, EGLImageKHR image);
 #endif
-typedef struct wl_buffer * (EGLAPIENTRYP PFNEGLCREATEWAYLANDBUFFERFROMIMAGEWL) (EGLDisplay dpy, EGLImageKHR image);
+typedef struct wl_buffer *(EGLAPIENTRYP PFNEGLCREATEWAYLANDBUFFERFROMIMAGEWL)(EGLDisplay dpy, EGLImageKHR image);
 #endif
 
 #ifndef EGL_TEXTURE_EXTERNAL_WL
-#define EGL_TEXTURE_EXTERNAL_WL         0x31DA
+#define EGL_TEXTURE_EXTERNAL_WL 0x31DA
 #endif
 
 #ifndef EGL_BUFFER_AGE_EXT
-#define EGL_BUFFER_AGE_EXT              0x313D
+#define EGL_BUFFER_AGE_EXT 0x313D
 #endif
 
 #ifndef EGL_WAYLAND_Y_INVERTED_WL
-#define EGL_WAYLAND_Y_INVERTED_WL		0x31DB /* eglQueryWaylandBufferWL attribute */
+#define EGL_WAYLAND_Y_INVERTED_WL 0x31DB /* eglQueryWaylandBufferWL attribute */
 #endif
 
 #ifndef GL_EXT_unpack_subimage
 #define GL_EXT_unpack_subimage 1
-#define GL_UNPACK_ROW_LENGTH_EXT          0x0CF2
-#define GL_UNPACK_SKIP_ROWS_EXT           0x0CF3
-#define GL_UNPACK_SKIP_PIXELS_EXT         0x0CF4
+#define GL_UNPACK_ROW_LENGTH_EXT 0x0CF2
+#define GL_UNPACK_SKIP_ROWS_EXT 0x0CF3
+#define GL_UNPACK_SKIP_PIXELS_EXT 0x0CF4
 #endif /* GL_EXT_unpack_subimage */
 
 /* Mesas gl2ext.h and probably Khronos upstream defined
@@ -104,33 +104,33 @@ typedef struct wl_buffer * (EGLAPIENTRYP PFNEGLCREATEWAYLANDBUFFERFROMIMAGEWL) (
  * In case we're using that mess, manually define the _EXT versions
  * of the tokens here.*/
 #if defined(GL_EXT_unpack_subimage) && !defined(GL_UNPACK_ROW_LENGTH_EXT)
-#define GL_UNPACK_ROW_LENGTH_EXT                                0x0CF2
-#define GL_UNPACK_SKIP_ROWS_EXT                                 0x0CF3
-#define GL_UNPACK_SKIP_PIXELS_EXT                               0x0CF4
+#define GL_UNPACK_ROW_LENGTH_EXT 0x0CF2
+#define GL_UNPACK_SKIP_ROWS_EXT 0x0CF3
+#define GL_UNPACK_SKIP_PIXELS_EXT 0x0CF4
 #endif
 
 /* Define needed tokens from EGL_EXT_image_dma_buf_import extension
  * here to avoid having to add ifdefs everywhere.*/
 #ifndef EGL_EXT_image_dma_buf_import
-#define EGL_LINUX_DMA_BUF_EXT					0x3270
-#define EGL_LINUX_DRM_FOURCC_EXT				0x3271
-#define EGL_DMA_BUF_PLANE0_FD_EXT				0x3272
-#define EGL_DMA_BUF_PLANE0_OFFSET_EXT				0x3273
-#define EGL_DMA_BUF_PLANE0_PITCH_EXT				0x3274
-#define EGL_DMA_BUF_PLANE1_FD_EXT				0x3275
-#define EGL_DMA_BUF_PLANE1_OFFSET_EXT				0x3276
-#define EGL_DMA_BUF_PLANE1_PITCH_EXT				0x3277
-#define EGL_DMA_BUF_PLANE2_FD_EXT				0x3278
-#define EGL_DMA_BUF_PLANE2_OFFSET_EXT				0x3279
-#define EGL_DMA_BUF_PLANE2_PITCH_EXT				0x327A
+#define EGL_LINUX_DMA_BUF_EXT 0x3270
+#define EGL_LINUX_DRM_FOURCC_EXT 0x3271
+#define EGL_DMA_BUF_PLANE0_FD_EXT 0x3272
+#define EGL_DMA_BUF_PLANE0_OFFSET_EXT 0x3273
+#define EGL_DMA_BUF_PLANE0_PITCH_EXT 0x3274
+#define EGL_DMA_BUF_PLANE1_FD_EXT 0x3275
+#define EGL_DMA_BUF_PLANE1_OFFSET_EXT 0x3276
+#define EGL_DMA_BUF_PLANE1_PITCH_EXT 0x3277
+#define EGL_DMA_BUF_PLANE2_FD_EXT 0x3278
+#define EGL_DMA_BUF_PLANE2_OFFSET_EXT 0x3279
+#define EGL_DMA_BUF_PLANE2_PITCH_EXT 0x327A
 #endif
 
 /* Define tokens from EGL_EXT_image_dma_buf_import_modifiers */
 #ifndef EGL_EXT_image_dma_buf_import_modifiers
 #define EGL_EXT_image_dma_buf_import_modifiers 1
-#define EGL_DMA_BUF_PLANE3_FD_EXT         0x3440
-#define EGL_DMA_BUF_PLANE3_OFFSET_EXT     0x3441
-#define EGL_DMA_BUF_PLANE3_PITCH_EXT      0x3442
+#define EGL_DMA_BUF_PLANE3_FD_EXT 0x3440
+#define EGL_DMA_BUF_PLANE3_OFFSET_EXT 0x3441
+#define EGL_DMA_BUF_PLANE3_PITCH_EXT 0x3442
 #define EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT 0x3443
 #define EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT 0x3444
 #define EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT 0x3445
@@ -139,18 +139,18 @@ typedef struct wl_buffer * (EGLAPIENTRYP PFNEGLCREATEWAYLANDBUFFERFROMIMAGEWL) (
 #define EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT 0x3448
 #define EGL_DMA_BUF_PLANE3_MODIFIER_LO_EXT 0x3449
 #define EGL_DMA_BUF_PLANE3_MODIFIER_HI_EXT 0x344A
-typedef EGLBoolean (EGLAPIENTRYP PFNEGLQUERYDMABUFFORMATSEXTPROC) (EGLDisplay dpy, EGLint max_formats, EGLint *formats, EGLint *num_formats);
-typedef EGLBoolean (EGLAPIENTRYP PFNEGLQUERYDMABUFMODIFIERSEXTPROC) (EGLDisplay dpy, EGLint format, EGLint max_modifiers, EGLuint64KHR *modifiers, EGLBoolean *external_only, EGLint *num_modifiers);
+typedef EGLBoolean(EGLAPIENTRYP PFNEGLQUERYDMABUFFORMATSEXTPROC)(EGLDisplay dpy, EGLint max_formats, EGLint *formats, EGLint *num_formats);
+typedef EGLBoolean(EGLAPIENTRYP PFNEGLQUERYDMABUFMODIFIERSEXTPROC)(EGLDisplay dpy, EGLint format, EGLint max_modifiers, EGLuint64KHR *modifiers, EGLBoolean *external_only, EGLint *num_modifiers);
 #endif
 
 #ifndef EGL_EXT_swap_buffers_with_damage
 #define EGL_EXT_swap_buffers_with_damage 1
-typedef EGLBoolean (EGLAPIENTRYP PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC) (EGLDisplay dpy, EGLSurface surface, EGLint *rects, EGLint n_rects);
+typedef EGLBoolean(EGLAPIENTRYP PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC)(EGLDisplay dpy, EGLSurface surface, EGLint *rects, EGLint n_rects);
 #endif /* EGL_EXT_swap_buffers_with_damage */
 
 #ifndef EGL_MESA_configless_context
 #define EGL_MESA_configless_context 1
-#define EGL_NO_CONFIG_MESA                      ((EGLConfig)0)
+#define EGL_NO_CONFIG_MESA ((EGLConfig)0)
 #endif
 
 #ifndef EGL_NO_CONFIG_KHR
@@ -159,9 +159,9 @@ typedef EGLBoolean (EGLAPIENTRYP PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC) (EGLDisplay
 
 #ifndef EGL_EXT_platform_base
 #define EGL_EXT_platform_base 1
-typedef EGLDisplay (EGLAPIENTRYP PFNEGLGETPLATFORMDISPLAYEXTPROC) (EGLenum platform, void *native_display, const EGLint *attrib_list);
-typedef EGLSurface (EGLAPIENTRYP PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC) (EGLDisplay dpy, EGLConfig config, void *native_window, const EGLint *attrib_list);
-typedef EGLSurface (EGLAPIENTRYP PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC) (EGLDisplay dpy, EGLConfig config, void *native_pixmap, const EGLint *attrib_list);
+typedef EGLDisplay(EGLAPIENTRYP PFNEGLGETPLATFORMDISPLAYEXTPROC)(EGLenum platform, void *native_display, const EGLint *attrib_list);
+typedef EGLSurface(EGLAPIENTRYP PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC)(EGLDisplay dpy, EGLConfig config, void *native_window, const EGLint *attrib_list);
+typedef EGLSurface(EGLAPIENTRYP PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC)(EGLDisplay dpy, EGLConfig config, void *native_pixmap, const EGLint *attrib_list);
 #endif /* EGL_EXT_platform_base */
 
 #ifndef EGL_PLATFORM_GBM_KHR
@@ -177,7 +177,7 @@ typedef EGLSurface (EGLAPIENTRYP PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC) (EGLD
 #endif
 
 #ifndef EGL_PLATFORM_SURFACELESS_MESA
-#define EGL_PLATFORM_SURFACELESS_MESA     0x31DD
+#define EGL_PLATFORM_SURFACELESS_MESA 0x31DD
 #endif
 
 #ifndef EGL_KHR_cl_event2
@@ -191,13 +191,13 @@ typedef void *EGLSyncKHR;
 
 #ifndef EGL_KHR_fence_sync
 #define EGL_KHR_fence_sync 1
-typedef EGLSyncKHR (EGLAPIENTRYP PFNEGLCREATESYNCKHRPROC) (EGLDisplay dpy, EGLenum type, const EGLint *attrib_list);
-typedef EGLBoolean (EGLAPIENTRYP PFNEGLDESTROYSYNCKHRPROC) (EGLDisplay dpy, EGLSyncKHR sync);
+typedef EGLSyncKHR(EGLAPIENTRYP PFNEGLCREATESYNCKHRPROC)(EGLDisplay dpy, EGLenum type, const EGLint *attrib_list);
+typedef EGLBoolean(EGLAPIENTRYP PFNEGLDESTROYSYNCKHRPROC)(EGLDisplay dpy, EGLSyncKHR sync);
 #endif /* EGL_KHR_fence_sync */
 
 #ifndef EGL_ANDROID_native_fence_sync
 #define EGL_ANDROID_native_fence_sync 1
-typedef EGLint (EGLAPIENTRYP PFNEGLDUPNATIVEFENCEFDANDROIDPROC) (EGLDisplay dpy, EGLSyncKHR sync);
+typedef EGLint(EGLAPIENTRYP PFNEGLDUPNATIVEFENCEFDANDROIDPROC)(EGLDisplay dpy, EGLSyncKHR sync);
 #endif /* EGL_ANDROID_native_fence_sync */
 
 #ifndef EGL_SYNC_NATIVE_FENCE_ANDROID
@@ -211,10 +211,10 @@ typedef EGLint (EGLAPIENTRYP PFNEGLDUPNATIVEFENCEFDANDROIDPROC) (EGLDisplay dpy,
 #else /* ENABLE_EGL */
 
 /* EGL platform definition are keept to allow compositor-xx.c to build */
-#define EGL_PLATFORM_GBM_KHR     0x31D7
+#define EGL_PLATFORM_GBM_KHR 0x31D7
 #define EGL_PLATFORM_WAYLAND_KHR 0x31D8
-#define EGL_PLATFORM_X11_KHR     0x31D5
-#define EGL_PLATFORM_SURFACELESS_MESA     0x31DD
+#define EGL_PLATFORM_X11_KHR 0x31D5
+#define EGL_PLATFORM_SURFACELESS_MESA 0x31DD
 
 #endif /* ENABLE_EGL */
 

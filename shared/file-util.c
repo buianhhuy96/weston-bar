@@ -44,13 +44,15 @@ current_time_str(char *str, size_t len, const char *fmt)
 
 	t = time(NULL);
 	t_local = localtime(&t);
-	if (!t_local) {
+	if (!t_local)
+	{
 		errno = ETIME;
 		return -1;
 	}
 
 	ret = strftime(str, len, fmt, t_local);
-	if (ret == 0) {
+	if (ret == 0)
+	{
 		errno = ETIME;
 		return -1;
 	}
@@ -84,7 +86,7 @@ create_file_excl(const char *fname)
  */
 FILE *
 file_create_dated(const char *path, const char *prefix, const char *suffix,
-		  char *name_out, size_t name_len)
+				  char *name_out, size_t name_len)
 {
 	char timestr[128];
 	int ret;
@@ -98,22 +100,25 @@ file_create_dated(const char *path, const char *prefix, const char *suffix,
 		return NULL;
 
 	ret = snprintf(name_out, name_len, "%s%s%s%s%s",
-		       with_path ? path : "", with_path ? "/" : "",
-		       prefix, timestr, suffix);
-	if (ret < 0 || (size_t)ret >= name_len) {
+				   with_path ? path : "", with_path ? "/" : "",
+				   prefix, timestr, suffix);
+	if (ret < 0 || (size_t)ret >= name_len)
+	{
 		errno = ENOBUFS;
 		return NULL;
 	}
 
 	fd = create_file_excl(name_out);
 
-	while (fd == -1 && errno == EEXIST) {
+	while (fd == -1 && errno == EEXIST)
+	{
 		cnt++;
 
 		ret = snprintf(name_out, name_len, "%s%s%s%s-%d%s",
-			       with_path ? path : "", with_path ? "/" : "",
-			       prefix, timestr, cnt, suffix);
-		if (ret < 0 || (size_t)ret >= name_len) {
+					   with_path ? path : "", with_path ? "/" : "",
+					   prefix, timestr, cnt, suffix);
+		if (ret < 0 || (size_t)ret >= name_len)
+		{
 			errno = ENOBUFS;
 			return NULL;
 		}

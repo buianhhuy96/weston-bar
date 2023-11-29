@@ -28,25 +28,27 @@
 
 #include <libweston/libweston.h>
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include <stdint.h>
 
 #define WESTON_WAYLAND_BACKEND_CONFIG_VERSION 3
 
-struct weston_wayland_backend_config {
-	struct weston_backend_config base;
-	enum weston_renderer_type renderer;
-	bool sprawl;
-	char *display_name;
-	bool fullscreen;
-	char *cursor_theme;
-	int cursor_size;
-};
+	struct weston_wayland_backend_config
+	{
+		struct weston_backend_config base;
+		enum weston_renderer_type renderer;
+		bool sprawl;
+		char *display_name;
+		bool fullscreen;
+		char *cursor_theme;
+		int cursor_size;
+	};
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

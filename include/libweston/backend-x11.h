@@ -26,8 +26,9 @@
 #ifndef WESTON_COMPOSITOR_X11_H
 #define WESTON_COMPOSITOR_X11_H
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include <stdint.h>
@@ -36,16 +37,17 @@ extern "C" {
 
 #define WESTON_X11_BACKEND_CONFIG_VERSION 3
 
-struct weston_x11_backend_config {
-	struct weston_backend_config base;
+	struct weston_x11_backend_config
+	{
+		struct weston_backend_config base;
 
-	bool fullscreen;
-	bool no_input;
+		bool fullscreen;
+		bool no_input;
 
-	enum weston_renderer_type renderer;
-};
+		enum weston_renderer_type renderer;
+	};
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

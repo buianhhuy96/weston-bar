@@ -29,15 +29,16 @@
 #include <libweston/libweston.h>
 #include <libweston/plugin-registry.h>
 
-#define WESTON_PIPEWIRE_API_NAME	"weston_pipewire_api_v1"
+#define WESTON_PIPEWIRE_API_NAME "weston_pipewire_api_v1"
 
-struct weston_pipewire_api {
+struct weston_pipewire_api
+{
 	/** Create pipewire outputs
 	 *
 	 * Returns 0 on success, -1 on failure.
 	 */
 	struct weston_output *(*create_output)(struct weston_compositor *c,
-					       char *name);
+										   char *name);
 
 	/** Check if output is pipewire */
 	bool (*is_pipewire_output)(struct weston_output *output);
@@ -54,7 +55,7 @@ weston_pipewire_get_api(struct weston_compositor *compositor)
 {
 	const void *api;
 	api = weston_plugin_api_get(compositor, WESTON_PIPEWIRE_API_NAME,
-				    sizeof(struct weston_pipewire_api));
+								sizeof(struct weston_pipewire_api));
 
 	return (const struct weston_pipewire_api *)api;
 }

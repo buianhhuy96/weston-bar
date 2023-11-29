@@ -26,8 +26,9 @@
 #ifndef WESTON_XALLOC_H
 #define WESTON_XALLOC_H
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include <stdint.h>
@@ -36,15 +37,15 @@ extern "C" {
 
 #include <libweston/zalloc.h>
 
-void *
-fail_on_null(void *p, size_t size, char *file, int32_t line);
+    void *
+    fail_on_null(void *p, size_t size, char *file, int32_t line);
 
 #define xmalloc(s) (fail_on_null(malloc(s), (s), __FILE__, __LINE__))
 #define xzalloc(s) (fail_on_null(zalloc(s), (s), __FILE__, __LINE__))
 #define xstrdup(s) (fail_on_null(strdup(s), 0, __FILE__, __LINE__))
 #define xrealloc(p, s) (fail_on_null(realloc(p, s), (s), __FILE__, __LINE__))
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

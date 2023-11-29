@@ -2291,7 +2291,7 @@ void wayland_pointer_leave_cb(void *data,
 		}
 		else if (global_desktop->panel->clock_state == SYSTEM_SHOWN)
 		{
-			//launch_system(global_desktop->panel->volumeup_launcher);
+			// launch_system(global_desktop->panel->volumeup_launcher);
 		}
 
 		window_schedule_resize(global_desktop->panel->window, global_desktop_width, 50);
@@ -3033,7 +3033,6 @@ void clock_volume_down()
 
 static void dummy_func()
 {
-
 }
 
 static void clock_shutdown()
@@ -3262,7 +3261,6 @@ panel_add_launchers(struct panel *panel, struct desktop *desktop)
 			weston_config_section_get_string(s, "default_icon", &default_icon, NULL);
 			weston_config_section_get_string(s, "shutdown", &shutdown, NULL);
 			weston_config_section_get_string(s, "reboot", &reboot, NULL);
-
 		}
 		if (strcmp(name, "launcher") != 0)
 			continue;
@@ -3303,52 +3301,52 @@ panel_add_launchers(struct panel *panel, struct desktop *desktop)
 
 	// Action launchers
 	/*
-	strcpy(default_icon_path, default_icon);	   
-	strcat(default_icon_path, "/tv-symbolic.svg"); 
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/tv-symbolic.svg");
 	panel_add_launcher(panel,
 					   default_icon_path,
 					   BINDIR "/weston-terminal",
 					   0,
 					   toggle_inhibit);
 	*/
-	strcpy(default_icon_path, default_icon);			  
-	strcat(default_icon_path, "/open-menu-symbolic.svg"); 
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/open-menu-symbolic.svg");
 	panel_add_launcher(panel,
 					   default_icon_path,
 					   "",
 					   0,
 					   launch_exposay);
-	
+
 	/*
-	strcpy(default_icon_path, default_icon);				  
-	strcat(default_icon_path, "/emblem-system-symbolic.svg"); 
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/emblem-system-symbolic.svg");
 	panel_add_launcher(panel,
 					   default_icon_path,
 					   "",
 					   0,
 					   launch_system);
 	*/
-	strcpy(default_icon_path, default_icon);				  
-	strcat(default_icon_path, "/system-reboot-symbolic.svg"); 
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/system-reboot-symbolic.svg");
 	panel_add_launcher(panel,
 					   default_icon_path,
 					   "/run/wrappers/bin/sudo reboot",
 					   0,
 					   dummy_func);
-	
-	strcpy(default_icon_path, default_icon);				  
-	strcat(default_icon_path, "/system-shutdown-symbolic.svg"); 
+
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/system-shutdown-symbolic.svg");
 	panel_add_launcher(panel,
 					   default_icon_path,
 					   "/run/wrappers/bin/sudo poweroff",
 					   0,
 					   dummy_func);
-					   
+
 	/*
-	
-	
-	strcpy(default_icon_path, default_icon);							  
-	strcat(default_icon_path, "/multimedia-volume-control-symbolic.svg"); 
+
+
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/multimedia-volume-control-symbolic.svg");
 	if (global_desktop->mixer_handle != NULL)
 	{
 		panel_add_launcher(panel,
@@ -3357,10 +3355,10 @@ panel_add_launchers(struct panel *panel, struct desktop *desktop)
 						   0,
 						   launch_volume);
 	}
-	
+
 	// Add Restart button for system section
-	strcpy(default_icon_path, default_icon);				  
-	strcat(default_icon_path, "/system-reboot-symbolic.svg"); 
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/system-reboot-symbolic.svg");
 	panel->reboot_launcher = panel_add_launcher(panel,
 												default_icon_path,
 												"/run/wrappers/bin/sudo reboot",
@@ -3368,8 +3366,8 @@ panel_add_launchers(struct panel *panel, struct desktop *desktop)
 												dummy_func);
 
 	// Add Shutdown button
-	strcpy(default_icon_path, default_icon);					
-	strcat(default_icon_path, "/system-shutdown-symbolic.svg"); 
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/system-shutdown-symbolic.svg");
 	panel->shutdown_launcher = panel_add_launcher(panel,
 												  default_icon_path,
 												  "/run/wrappers/bin/sudo poweroff",
@@ -3386,16 +3384,16 @@ panel_add_launchers(struct panel *panel, struct desktop *desktop)
 
 	// Add plus/minus button
 	/*
-	strcpy(default_icon_path, default_icon);				
-	strcat(default_icon_path, "/list-remove-symbolic.svg"); 
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/list-remove-symbolic.svg");
 	panel->volumedown_launcher = panel_add_launcher(panel,
 													default_icon_path,
 													BINDIR "/weston-terminal",
 													WAYWARD_HIDE_X,
 													clock_volume_down);
 
-	strcpy(default_icon_path, default_icon);			 
-	strcat(default_icon_path, "/list-add-symbolic.svg"); 
+	strcpy(default_icon_path, default_icon);
+	strcat(default_icon_path, "/list-add-symbolic.svg");
 	panel->volumeup_launcher = panel_add_launcher(panel,
 												  default_icon_path,
 												  BINDIR "/weston-terminal",

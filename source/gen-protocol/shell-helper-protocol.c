@@ -36,23 +36,25 @@ static const struct wl_interface *shell_helper_types[] = {
 };
 
 static const struct wl_message shell_helper_requests[] = {
-	{ "move_surface", "oii", shell_helper_types + 0 },
-	{ "add_surface_to_layer", "oo", shell_helper_types + 3 },
-	{ "set_panel", "o", shell_helper_types + 5 },
-	{ "slide_surface", "oii", shell_helper_types + 6 },
-	{ "change_gamma", "oi", shell_helper_types + 9 },
-	{ "bind_key_panel", "ooo", shell_helper_types + 11 },
-	{ "keyboard_focus_surface", "o", shell_helper_types + 14 },
-	{ "slide_surface_back", "o", shell_helper_types + 15 },
-	{ "curtain", "oi", shell_helper_types + 16 },
-	{ "launch_exposay", "oo", shell_helper_types + 18 },
-	{ "toggle_inhibit", "oo", shell_helper_types + 20 },
-	{ "move_background_surface", "oo", shell_helper_types + 22 },
+	{"move_surface", "oii", shell_helper_types + 0},
+	{"add_surface_to_layer", "oo", shell_helper_types + 3},
+	{"set_panel", "o", shell_helper_types + 5},
+	{"slide_surface", "oii", shell_helper_types + 6},
+	{"change_gamma", "oi", shell_helper_types + 9},
+	{"bind_key_panel", "ooo", shell_helper_types + 11},
+	{"keyboard_focus_surface", "o", shell_helper_types + 14},
+	{"slide_surface_back", "o", shell_helper_types + 15},
+	{"curtain", "oi", shell_helper_types + 16},
+	{"launch_exposay", "oo", shell_helper_types + 18},
+	{"toggle_inhibit", "oo", shell_helper_types + 20},
+	{"move_background_surface", "oo", shell_helper_types + 22},
 };
 
 WL_EXPORT const struct wl_interface shell_helper_interface = {
-	"shell_helper", 1,
-	12, shell_helper_requests,
-	0, NULL,
+	"shell_helper",
+	1,
+	12,
+	shell_helper_requests,
+	0,
+	NULL,
 };
-

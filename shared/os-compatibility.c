@@ -43,8 +43,7 @@
 
 #define READONLY_SEALS (F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE)
 
-int
-os_fd_set_cloexec(int fd)
+int os_fd_set_cloexec(int fd)
 {
 	long flags;
 
@@ -64,15 +63,15 @@ os_fd_set_cloexec(int fd)
 static int
 set_cloexec_or_close(int fd)
 {
-	if (os_fd_set_cloexec(fd) != 0) {
+	if (os_fd_set_cloexec(fd) != 0)
+	{
 		close(fd);
 		return -1;
 	}
 	return fd;
 }
 
-int
-os_socketpair_cloexec(int domain, int type, int protocol, int *sv)
+int os_socketpair_cloexec(int domain, int type, int protocol, int *sv)
 {
 	int ret;
 
@@ -97,8 +96,7 @@ os_socketpair_cloexec(int domain, int type, int protocol, int *sv)
 	return -1;
 }
 
-int
-os_epoll_create_cloexec(void)
+int os_epoll_create_cloexec(void)
 {
 	int fd;
 
@@ -125,7 +123,8 @@ create_tmpfile_cloexec(char *tmpname)
 		unlink(tmpname);
 #else
 	fd = mkstemp(tmpname);
-	if (fd >= 0) {
+	if (fd >= 0)
+	{
 		fd = set_cloexec_or_close(fd);
 		unlink(tmpname);
 	}
@@ -162,8 +161,7 @@ create_tmpfile_cloexec(char *tmpname)
  * make sure SIGBUS can't happen.  It also avoids requiring
  * XDG_RUNTIME_DIR.
  */
-int
-os_create_anonymous_file(off_t size)
+int os_create_anonymous_file(off_t size)
 {
 	static const char template[] = "/weston-shared-XXXXXX";
 	const char *path;
@@ -173,7 +171,8 @@ os_create_anonymous_file(off_t size)
 
 #ifdef HAVE_MEMFD_CREATE
 	fd = memfd_create("weston-shared", MFD_CLOEXEC | MFD_ALLOW_SEALING);
-	if (fd >= 0) {
+	if (fd >= 0)
+	{
 		/* We can add this seal before calling posix_fallocate(), as
 		 * the file is currently zero-sized anyway.
 		 *
@@ -181,11 +180,13 @@ os_create_anonymous_file(off_t size)
 		 * couldn't do anything with it anyway.
 		 */
 		fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK);
-	} else
+	}
+	else
 #endif
 	{
 		path = getenv("XDG_RUNTIME_DIR");
-		if (!path) {
+		if (!path)
+		{
 			errno = ENOENT;
 			return -1;
 		}
@@ -206,19 +207,23 @@ os_create_anonymous_file(off_t size)
 	}
 
 #ifdef HAVE_POSIX_FALLOCATE
-	do {
+	do
+	{
 		ret = posix_fallocate(fd, 0, size);
 	} while (ret == EINTR);
-	if (ret != 0) {
+	if (ret != 0)
+	{
 		close(fd);
 		errno = ret;
 		return -1;
 	}
 #else
-	do {
+	do
+	{
 		ret = ftruncate(fd, size);
 	} while (ret < 0 && errno == EINTR);
-	if (ret < 0) {
+	if (ret < 0)
+	{
 		close(fd);
 		return -1;
 	}
@@ -237,7 +242,8 @@ strchrnul(const char *s, int c)
 }
 #endif
 
-struct ro_anonymous_file {
+struct ro_anonymous_file
+{
 	int fd;
 	size_t size;
 };
@@ -254,13 +260,14 @@ struct ro_anonymous_file {
  */
 struct ro_anonymous_file *
 os_ro_anonymous_file_create(size_t size,
-			    const char *data)
+							const char *data)
 {
 	struct ro_anonymous_file *file;
 	void *map;
 
 	file = zalloc(sizeof *file);
-	if (!file) {
+	if (!file)
+	{
 		errno = ENOMEM;
 		return NULL;
 	}
@@ -301,8 +308,7 @@ err_free:
  *
  * \param file The file to destroy.
  */
-void
-os_ro_anonymous_file_destroy(struct ro_anonymous_file *file)
+void os_ro_anonymous_file_destroy(struct ro_anonymous_file *file)
 {
 	close(file->fd);
 	free(file);
@@ -336,9 +342,8 @@ os_ro_anonymous_file_size(struct ro_anonymous_file *file)
  * instead of calling \c close.
  * If the function fails errno is set.
  */
-int
-os_ro_anonymous_file_get_fd(struct ro_anonymous_file *file,
-			    enum ro_anonymous_file_mapmode mapmode)
+int os_ro_anonymous_file_get_fd(struct ro_anonymous_file *file,
+								enum ro_anonymous_file_mapmode mapmode)
 {
 	void *src, *dst;
 	int seals, fd;
@@ -349,7 +354,7 @@ os_ro_anonymous_file_get_fd(struct ro_anonymous_file *file,
 	 * so we can simply pass the memfd fd
 	 */
 	if (seals != -1 && mapmode == RO_ANONYMOUS_FILE_MAPMODE_PRIVATE &&
-	    (seals & READONLY_SEALS) == READONLY_SEALS)
+		(seals & READONLY_SEALS) == READONLY_SEALS)
 		return file->fd;
 
 	/* for all other cases we create a new anonymous file that can be mapped
@@ -360,13 +365,15 @@ os_ro_anonymous_file_get_fd(struct ro_anonymous_file *file,
 		return fd;
 
 	src = mmap(NULL, file->size, PROT_READ, MAP_PRIVATE, file->fd, 0);
-	if (src == MAP_FAILED) {
+	if (src == MAP_FAILED)
+	{
 		close(fd);
 		return -1;
 	}
 
 	dst = mmap(NULL, file->size, PROT_WRITE, MAP_SHARED, fd, 0);
-	if (dst == MAP_FAILED) {
+	if (dst == MAP_FAILED)
+	{
 		close(fd);
 		munmap(src, file->size);
 		return -1;
@@ -388,8 +395,7 @@ os_ro_anonymous_file_get_fd(struct ro_anonymous_file *file,
  * \c os_ro_anonymous_file_get_fd to not leake any resources.
  * If the function fails errno is set.
  */
-int
-os_ro_anonymous_file_put_fd(int fd)
+int os_ro_anonymous_file_put_fd(int fd)
 {
 	int seals = fcntl(fd, F_GET_SEALS);
 	if (seals == -1 && errno != EINVAL)

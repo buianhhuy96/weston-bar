@@ -39,21 +39,22 @@
 static bool
 handle_option(const struct weston_option *option, char *value)
 {
-	char* p;
+	char *p;
 
-	switch (option->type) {
+	switch (option->type)
+	{
 	case WESTON_OPTION_INTEGER:
 		if (!safe_strtoint(value, option->data))
 			return false;
 		return true;
 	case WESTON_OPTION_UNSIGNED_INTEGER:
 		errno = 0;
-		* (uint32_t *) option->data = strtoul(value, &p, 10);
+		*(uint32_t *)option->data = strtoul(value, &p, 10);
 		if (errno != 0 || p == value || *p != '\0')
 			return false;
 		return true;
 	case WESTON_OPTION_STRING:
-		* (char **) option->data = strdup(value);
+		*(char **)option->data = strdup(value);
 		return true;
 	default:
 		assert(0);
@@ -66,7 +67,8 @@ long_option(const struct weston_option *options, int count, char *arg)
 {
 	int k, len;
 
-	for (k = 0; k < count; k++) {
+	for (k = 0; k < count; k++)
+	{
 		if (!options[k].name)
 			continue;
 
@@ -74,13 +76,17 @@ long_option(const struct weston_option *options, int count, char *arg)
 		if (strncmp(options[k].name, arg + 2, len) != 0)
 			continue;
 
-		if (options[k].type == WESTON_OPTION_BOOLEAN) {
-			if (!arg[len + 2]) {
-				* (bool *) options[k].data = true;
+		if (options[k].type == WESTON_OPTION_BOOLEAN)
+		{
+			if (!arg[len + 2])
+			{
+				*(bool *)options[k].data = true;
 
 				return true;
 			}
-		} else if (arg[len+2] == '=') {
+		}
+		else if (arg[len + 2] == '=')
+		{
 			return handle_option(options + k, arg + len + 3);
 		}
 	}
@@ -90,11 +96,12 @@ long_option(const struct weston_option *options, int count, char *arg)
 
 static bool
 long_option_with_arg(const struct weston_option *options, int count, char *arg,
-		     char *param)
+					 char *param)
 {
 	int k, len;
 
-	for (k = 0; k < count; k++) {
+	for (k = 0; k < count; k++)
+	{
 		if (!options[k].name)
 			continue;
 
@@ -121,19 +128,26 @@ short_option(const struct weston_option *options, int count, char *arg)
 	if (!arg[1])
 		return false;
 
-	for (k = 0; k < count; k++) {
+	for (k = 0; k < count; k++)
+	{
 		if (options[k].short_name != arg[1])
 			continue;
 
-		if (options[k].type == WESTON_OPTION_BOOLEAN) {
-			if (!arg[2]) {
-				* (bool *) options[k].data = true;
+		if (options[k].type == WESTON_OPTION_BOOLEAN)
+		{
+			if (!arg[2])
+			{
+				*(bool *)options[k].data = true;
 
 				return true;
 			}
-		} else if (arg[2]) {
+		}
+		else if (arg[2])
+		{
 			return handle_option(options + k, arg + 2);
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
@@ -149,7 +163,8 @@ short_option_with_arg(const struct weston_option *options, int count, char *arg,
 	if (!arg[1])
 		return false;
 
-	for (k = 0; k < count; k++) {
+	for (k = 0; k < count; k++)
+	{
 		if (options[k].short_name != arg[1])
 			continue;
 
@@ -162,34 +177,40 @@ short_option_with_arg(const struct weston_option *options, int count, char *arg,
 	return false;
 }
 
-int
-parse_options(const struct weston_option *options,
-	      int count, int *argc, char *argv[])
+int parse_options(const struct weston_option *options,
+				  int count, int *argc, char *argv[])
 {
 	int i, j;
 
-	for (i = 1, j = 1; i < *argc; i++) {
-		if (argv[i][0] == '-') {
-			if (argv[i][1] == '-') {
+	for (i = 1, j = 1; i < *argc; i++)
+	{
+		if (argv[i][0] == '-')
+		{
+			if (argv[i][1] == '-')
+			{
 				/* Long option, e.g. --foo or --foo=bar */
 				if (long_option(options, count, argv[i]))
 					continue;
 
 				/* ...also handle --foo bar */
 				if (i + 1 < *argc &&
-				    long_option_with_arg(options, count,
-							 argv[i], argv[i+1])) {
+					long_option_with_arg(options, count,
+										 argv[i], argv[i + 1]))
+				{
 					i++;
 					continue;
 				}
-			} else {
+			}
+			else
+			{
 				/* Short option, e.g -f or -f42 */
 				if (short_option(options, count, argv[i]))
 					continue;
 
 				/* ...also handle -f 42 */
-				if (i+1 < *argc &&
-				    short_option_with_arg(options, count, argv[i], argv[i+1])) {
+				if (i + 1 < *argc &&
+					short_option_with_arg(options, count, argv[i], argv[i + 1]))
+				{
 					i++;
 					continue;
 				}

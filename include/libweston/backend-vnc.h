@@ -26,8 +26,9 @@
 #ifndef WESTON_COMPOSITOR_VNC_H
 #define WESTON_COMPOSITOR_VNC_H
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include <libweston/libweston.h>
@@ -36,38 +37,40 @@ extern "C" {
 #define WESTON_VNC_OUTPUT_API_NAME "weston_vnc_output_api_v1"
 #define VNC_DEFAULT_FREQ 60
 
-struct weston_vnc_output_api {
-	/** Initialize a VNC output with specified width and height.
-	 *
-	 * Returns 0 on success, -1 on failure.
-	 */
-	int (*output_set_size)(struct weston_output *output,
-			       int width, int height);
-};
+	struct weston_vnc_output_api
+	{
+		/** Initialize a VNC output with specified width and height.
+		 *
+		 * Returns 0 on success, -1 on failure.
+		 */
+		int (*output_set_size)(struct weston_output *output,
+							   int width, int height);
+	};
 
-static inline const struct weston_vnc_output_api *
-weston_vnc_output_get_api(struct weston_compositor *compositor)
-{
-	const void *api;
-	api = weston_plugin_api_get(compositor, WESTON_VNC_OUTPUT_API_NAME,
-				    sizeof(struct weston_vnc_output_api));
+	static inline const struct weston_vnc_output_api *
+	weston_vnc_output_get_api(struct weston_compositor *compositor)
+	{
+		const void *api;
+		api = weston_plugin_api_get(compositor, WESTON_VNC_OUTPUT_API_NAME,
+									sizeof(struct weston_vnc_output_api));
 
-	return (const struct weston_vnc_output_api *)api;
-}
+		return (const struct weston_vnc_output_api *)api;
+	}
 
 #define WESTON_VNC_BACKEND_CONFIG_VERSION 2
 
-struct weston_vnc_backend_config {
-	struct weston_backend_config base;
-	enum weston_renderer_type renderer;
-	char *bind_address;
-	int port;
-	int refresh_rate;
-	char *server_cert;
-	char *server_key;
-};
+	struct weston_vnc_backend_config
+	{
+		struct weston_backend_config base;
+		enum weston_renderer_type renderer;
+		char *bind_address;
+		int port;
+		int refresh_rate;
+		char *server_cert;
+		char *server_key;
+	};
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

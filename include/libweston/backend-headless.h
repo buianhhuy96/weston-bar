@@ -26,8 +26,9 @@
 #ifndef WESTON_COMPOSITOR_HEADLESS_H
 #define WESTON_COMPOSITOR_HEADLESS_H
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include <stdint.h>
@@ -36,17 +37,18 @@ extern "C" {
 
 #define WESTON_HEADLESS_BACKEND_CONFIG_VERSION 3
 
-struct weston_headless_backend_config {
-	struct weston_backend_config base;
+	struct weston_headless_backend_config
+	{
+		struct weston_backend_config base;
 
-	/** Select the renderer to use */
-	enum weston_renderer_type renderer;
+		/** Select the renderer to use */
+		enum weston_renderer_type renderer;
 
-	/** Use output decorations, requires use_gl = true */
-	bool decorate;
-};
+		/** Use output decorations, requires use_gl = true */
+		bool decorate;
+	};
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

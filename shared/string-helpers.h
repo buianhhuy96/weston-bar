@@ -52,14 +52,18 @@ safe_strtoint(const char *str, int32_t *value)
 
 	errno = 0;
 	ret = strtol(str, &end, 10);
-	if (errno != 0) {
+	if (errno != 0)
+	{
 		return false;
-	} else if (end == str || *end != '\0') {
+	}
+	else if (end == str || *end != '\0')
+	{
 		errno = EINVAL;
 		return false;
 	}
 
-	if ((long)((int32_t)ret) != ret) {
+	if ((long)((int32_t)ret) != ret)
+	{
 		errno = ERANGE;
 		return false;
 	}

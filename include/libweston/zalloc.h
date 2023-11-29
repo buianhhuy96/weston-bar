@@ -26,19 +26,20 @@
 #ifndef WESTON_ZALLOC_H
 #define WESTON_ZALLOC_H
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include <stdlib.h>
 
-static inline void *
-zalloc(size_t size)
-{
-	return calloc(1, size);
-}
+	static inline void *
+	zalloc(size_t size)
+	{
+		return calloc(1, size);
+	}
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

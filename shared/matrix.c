@@ -39,7 +39,6 @@
 
 #include <libweston/matrix.h>
 
-
 /*
  * Matrices are stored in column-major order, that is the array indices are:
  *  0  4  8 12
@@ -52,7 +51,7 @@ WL_EXPORT void
 weston_matrix_init(struct weston_matrix *matrix)
 {
 	static const struct weston_matrix identity = {
-		.d = { 1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  0, 0, 0, 1 },
+		.d = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
 		.type = 0,
 	};
 
@@ -68,7 +67,8 @@ weston_matrix_multiply(struct weston_matrix *m, const struct weston_matrix *n)
 	div_t d;
 	int i, j;
 
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < 16; i++)
+	{
 		tmp.d[i] = 0;
 		d = div(i, 4);
 		row = m->d + d.quot * 4;
@@ -84,7 +84,7 @@ WL_EXPORT void
 weston_matrix_translate(struct weston_matrix *matrix, float x, float y, float z)
 {
 	struct weston_matrix translate = {
-		.d = { 1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  x, y, z, 1 },
+		.d = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1},
 		.type = WESTON_MATRIX_TRANSFORM_TRANSLATE,
 	};
 
@@ -92,10 +92,10 @@ weston_matrix_translate(struct weston_matrix *matrix, float x, float y, float z)
 }
 
 WL_EXPORT void
-weston_matrix_scale(struct weston_matrix *matrix, float x, float y,float z)
+weston_matrix_scale(struct weston_matrix *matrix, float x, float y, float z)
 {
 	struct weston_matrix scale = {
-		.d = { x, 0, 0, 0,  0, y, 0, 0,  0, 0, z, 0,  0, 0, 0, 1 },
+		.d = {x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1},
 		.type = WESTON_MATRIX_TRANSFORM_SCALE,
 	};
 
@@ -106,7 +106,7 @@ WL_EXPORT void
 weston_matrix_rotate_xy(struct weston_matrix *matrix, float cos, float sin)
 {
 	struct weston_matrix translate = {
-		.d = { cos, sin, 0, 0,  -sin, cos, 0, 0,  0, 0, 1, 0,  0, 0, 0, 1 },
+		.d = {cos, sin, 0, 0, -sin, cos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
 		.type = WESTON_MATRIX_TRANSFORM_ROTATE,
 	};
 
@@ -120,7 +120,8 @@ weston_matrix_transform(struct weston_matrix *matrix, struct weston_vector *v)
 	int i, j;
 	struct weston_vector t;
 
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 4; i++)
+	{
 		t.f[i] = 0;
 		for (j = 0; j < 4; j++)
 			t.f[i] += v->f[j] * matrix->d[i + j * 4];
@@ -135,7 +136,8 @@ swap_rows(double *a, double *b)
 	unsigned k;
 	double tmp;
 
-	for (k = 0; k < 13; k += 4) {
+	for (k = 0; k < 13; k += 4)
+	{
 		tmp = a[k];
 		a[k] = b[k];
 		b[k] = tmp;
@@ -178,13 +180,15 @@ matrix_invert(double *A, unsigned *p, const struct weston_matrix *matrix)
 
 	for (i = 0; i < 4; ++i)
 		p[i] = i;
-	for (i = 16; i--; )
+	for (i = 16; i--;)
 		A[i] = matrix->d[i];
 
 	/* LU decomposition with partial pivoting */
-	for (k = 0; k < 4; ++k) {
+	for (k = 0; k < 4; ++k)
+	{
 		pivot = find_pivot(&A[k * 4], k);
-		if (pivot != k) {
+		if (pivot != k)
+		{
 			swap_unsigned(&p[k], &p[pivot]);
 			swap_rows(&A[k], &A[pivot]);
 		}
@@ -193,7 +197,8 @@ matrix_invert(double *A, unsigned *p, const struct weston_matrix *matrix)
 		if (fabs(pv) < 1e-9)
 			return -1; /* zero pivot, not invertible */
 
-		for (i = k + 1; i < 4; ++i) {
+		for (i = k + 1; i < 4; ++i)
+		{
 			A[i + k * 4] /= pv;
 
 			for (j = k + 1; j < 4; ++j)
@@ -241,7 +246,8 @@ inverse_transform(const double *LU, const unsigned *p, float *v)
 
 	b[0] /= LU[0 + 0 * 4];
 #else
-	for (j = 3; j > 0; --j) {
+	for (j = 3; j > 0; --j)
+	{
 		unsigned k;
 		b[j] /= LU[j + j * 4];
 		for (k = 0; k < j; ++k)
@@ -258,10 +264,10 @@ inverse_transform(const double *LU, const unsigned *p, float *v)
 
 WL_EXPORT int
 weston_matrix_invert(struct weston_matrix *inverse,
-		     const struct weston_matrix *matrix)
+					 const struct weston_matrix *matrix)
 {
-	double LU[16];		/* column-major */
-	unsigned perm[4];	/* permutation */
+	double LU[16];	  /* column-major */
+	unsigned perm[4]; /* permutation */
 	unsigned c;
 
 	if (matrix_invert(LU, perm, matrix) < 0)

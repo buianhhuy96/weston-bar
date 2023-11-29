@@ -28,27 +28,28 @@
 
 #include <stddef.h>
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
-struct weston_compositor;
+	struct weston_compositor;
 
-int
-weston_plugin_api_register(struct weston_compositor *compositor,
-			   const char *api_name,
-			   const void *vtable,
-			   size_t vtable_size);
+	int
+	weston_plugin_api_register(struct weston_compositor *compositor,
+							   const char *api_name,
+							   const void *vtable,
+							   size_t vtable_size);
 
-const void *
-weston_plugin_api_get(struct weston_compositor *compositor,
-		      const char *api_name,
-		      size_t vtable_size);
+	const void *
+	weston_plugin_api_get(struct weston_compositor *compositor,
+						  const char *api_name,
+						  size_t vtable_size);
 
-void
-weston_plugin_api_destroy_list(struct weston_compositor *compositor);
+	void
+	weston_plugin_api_destroy_list(struct weston_compositor *compositor);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

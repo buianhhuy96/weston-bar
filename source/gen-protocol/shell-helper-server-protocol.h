@@ -7,115 +7,116 @@
 #include <stddef.h>
 #include "wayland-server.h"
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
-struct wl_client;
-struct wl_resource;
+	struct wl_client;
+	struct wl_resource;
 
-/**
- * @page page_shell_helper The shell_helper protocol
- * @section page_ifaces_shell_helper Interfaces
- * - @subpage page_iface_shell_helper - 
- */
-struct shell_helper;
-struct weston_desktop_shell;
-struct wl_seat;
-struct wl_surface;
+	/**
+	 * @page page_shell_helper The shell_helper protocol
+	 * @section page_ifaces_shell_helper Interfaces
+	 * - @subpage page_iface_shell_helper -
+	 */
+	struct shell_helper;
+	struct weston_desktop_shell;
+	struct wl_seat;
+	struct wl_surface;
 
 #ifndef SHELL_HELPER_INTERFACE
 #define SHELL_HELPER_INTERFACE
-/**
- * @page page_iface_shell_helper shell_helper
- * @section page_iface_shell_helper_api API
- * See @ref iface_shell_helper.
- */
-/**
- * @defgroup iface_shell_helper The shell_helper interface
- */
-extern const struct wl_interface shell_helper_interface;
+	/**
+	 * @page page_iface_shell_helper shell_helper
+	 * @section page_iface_shell_helper_api API
+	 * See @ref iface_shell_helper.
+	 */
+	/**
+	 * @defgroup iface_shell_helper The shell_helper interface
+	 */
+	extern const struct wl_interface shell_helper_interface;
 #endif
 
-/**
- * @ingroup iface_shell_helper
- * @struct shell_helper_interface
- */
-struct shell_helper_interface {
 	/**
+	 * @ingroup iface_shell_helper
+	 * @struct shell_helper_interface
 	 */
-	void (*move_surface)(struct wl_client *client,
-			     struct wl_resource *resource,
-			     struct wl_resource *surface,
-			     int32_t x,
-			     int32_t y);
-	/**
-	 */
-	void (*add_surface_to_layer)(struct wl_client *client,
-				     struct wl_resource *resource,
-				     struct wl_resource *new_surface,
-				     struct wl_resource *existing_surface);
-	/**
-	 */
-	void (*set_panel)(struct wl_client *client,
-			  struct wl_resource *resource,
-			  struct wl_resource *surface);
-	/**
-	 */
-	void (*slide_surface)(struct wl_client *client,
-			      struct wl_resource *resource,
-			      struct wl_resource *surface,
-			      int32_t x,
-			      int32_t y);
-	/**
-	 */
-	void (*change_gamma)(struct wl_client *client,
-			     struct wl_resource *resource,
-			     struct wl_resource *surface,
-			     int32_t reset);
-	/**
-	 */
-	void (*bind_key_panel)(struct wl_client *client,
-			       struct wl_resource *resource,
-			       struct wl_resource *surface,
-			       struct wl_resource *seat,
-			       struct wl_resource *shell);
-	/**
-	 */
-	void (*keyboard_focus_surface)(struct wl_client *client,
-				       struct wl_resource *resource,
-				       struct wl_resource *surface);
-	/**
-	 */
-	void (*slide_surface_back)(struct wl_client *client,
-				   struct wl_resource *resource,
-				   struct wl_resource *surface);
-	/**
-	 */
-	void (*curtain)(struct wl_client *client,
-			struct wl_resource *resource,
-			struct wl_resource *surface,
-			int32_t show);
-	/**
-	 */
-	void (*launch_exposay)(struct wl_client *client,
-			       struct wl_resource *resource,
-			       struct wl_resource *shell,
-			       struct wl_resource *seat);
-	/**
-	 */
-	void (*toggle_inhibit)(struct wl_client *client,
-			       struct wl_resource *resource,
-			       struct wl_resource *shell,
-			       struct wl_resource *seat);
-	/**
-	 */
-	void (*move_background_surface)(struct wl_client *client,
-					struct wl_resource *resource,
-					struct wl_resource *shell,
-					struct wl_resource *background_surface);
-};
-
+	struct shell_helper_interface
+	{
+		/**
+		 */
+		void (*move_surface)(struct wl_client *client,
+							 struct wl_resource *resource,
+							 struct wl_resource *surface,
+							 int32_t x,
+							 int32_t y);
+		/**
+		 */
+		void (*add_surface_to_layer)(struct wl_client *client,
+									 struct wl_resource *resource,
+									 struct wl_resource *new_surface,
+									 struct wl_resource *existing_surface);
+		/**
+		 */
+		void (*set_panel)(struct wl_client *client,
+						  struct wl_resource *resource,
+						  struct wl_resource *surface);
+		/**
+		 */
+		void (*slide_surface)(struct wl_client *client,
+							  struct wl_resource *resource,
+							  struct wl_resource *surface,
+							  int32_t x,
+							  int32_t y);
+		/**
+		 */
+		void (*change_gamma)(struct wl_client *client,
+							 struct wl_resource *resource,
+							 struct wl_resource *surface,
+							 int32_t reset);
+		/**
+		 */
+		void (*bind_key_panel)(struct wl_client *client,
+							   struct wl_resource *resource,
+							   struct wl_resource *surface,
+							   struct wl_resource *seat,
+							   struct wl_resource *shell);
+		/**
+		 */
+		void (*keyboard_focus_surface)(struct wl_client *client,
+									   struct wl_resource *resource,
+									   struct wl_resource *surface);
+		/**
+		 */
+		void (*slide_surface_back)(struct wl_client *client,
+								   struct wl_resource *resource,
+								   struct wl_resource *surface);
+		/**
+		 */
+		void (*curtain)(struct wl_client *client,
+						struct wl_resource *resource,
+						struct wl_resource *surface,
+						int32_t show);
+		/**
+		 */
+		void (*launch_exposay)(struct wl_client *client,
+							   struct wl_resource *resource,
+							   struct wl_resource *shell,
+							   struct wl_resource *seat);
+		/**
+		 */
+		void (*toggle_inhibit)(struct wl_client *client,
+							   struct wl_resource *resource,
+							   struct wl_resource *shell,
+							   struct wl_resource *seat);
+		/**
+		 */
+		void (*move_background_surface)(struct wl_client *client,
+										struct wl_resource *resource,
+										struct wl_resource *shell,
+										struct wl_resource *background_surface);
+	};
 
 /**
  * @ingroup iface_shell_helper
@@ -166,7 +167,7 @@ struct shell_helper_interface {
  */
 #define SHELL_HELPER_MOVE_BACKGROUND_SURFACE_SINCE_VERSION 1
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

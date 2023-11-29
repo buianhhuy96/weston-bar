@@ -39,10 +39,7 @@
 #include "image-loader.h"
 #include <libweston/config-parser.h>
 
-
-
-void
-surface_flush_device(cairo_surface_t *surface)
+void surface_flush_device(cairo_surface_t *surface)
 {
 	cairo_device_t *device;
 
@@ -73,17 +70,21 @@ blur_surface(cairo_surface_t *surface, int margin)
 
 	half = size / 2;
 	a = 0;
-	for (i = 0; i < size; i++) {
+	for (i = 0; i < size; i++)
+	{
 		f = (i - half);
-		kernel[i] = exp(- f * f / ARRAY_LENGTH(kernel)) * 10000;
+		kernel[i] = exp(-f * f / ARRAY_LENGTH(kernel)) * 10000;
 		a += kernel[i];
 	}
 
-	for (i = 0; i < height; i++) {
-		s = (uint32_t *) (src + i * stride);
-		d = (uint32_t *) (dst + i * stride);
-		for (j = 0; j < width; j++) {
-			if (margin < j && j < width - margin) {
+	for (i = 0; i < height; i++)
+	{
+		s = (uint32_t *)(src + i * stride);
+		d = (uint32_t *)(dst + i * stride);
+		for (j = 0; j < width; j++)
+		{
+			if (margin < j && j < width - margin)
+			{
 				d[j] = s[j];
 				continue;
 			}
@@ -92,7 +93,8 @@ blur_surface(cairo_surface_t *surface, int margin)
 			y = 0;
 			z = 0;
 			w = 0;
-			for (k = 0; k < size; k++) {
+			for (k = 0; k < size; k++)
+			{
 				if (j - half + k < 0 || j - half + k >= width)
 					continue;
 				p = s[j - half + k];
@@ -106,11 +108,14 @@ blur_surface(cairo_surface_t *surface, int margin)
 		}
 	}
 
-	for (i = 0; i < height; i++) {
-		s = (uint32_t *) (dst + i * stride);
-		d = (uint32_t *) (src + i * stride);
-		for (j = 0; j < width; j++) {
-			if (margin <= i && i < height - margin) {
+	for (i = 0; i < height; i++)
+	{
+		s = (uint32_t *)(dst + i * stride);
+		d = (uint32_t *)(src + i * stride);
+		for (j = 0; j < width; j++)
+		{
+			if (margin <= i && i < height - margin)
+			{
 				d[j] = s[j];
 				continue;
 			}
@@ -119,10 +124,11 @@ blur_surface(cairo_surface_t *surface, int margin)
 			y = 0;
 			z = 0;
 			w = 0;
-			for (k = 0; k < size; k++) {
+			for (k = 0; k < size; k++)
+			{
 				if (i - half + k < 0 || i - half + k >= height)
 					continue;
-				s = (uint32_t *) (dst + (i - half + k) * stride);
+				s = (uint32_t *)(dst + (i - half + k) * stride);
 				p = s[j];
 
 				x += (p >> 24) * kernel[k];
@@ -140,37 +146,34 @@ blur_surface(cairo_surface_t *surface, int margin)
 	return 0;
 }
 
-void
-render_shadow(cairo_t *cr, cairo_surface_t *surface,
-	      int x, int y, int width, int height, int margin, int top_margin)
+void render_shadow(cairo_t *cr, cairo_surface_t *surface,
+				   int x, int y, int width, int height, int margin, int top_margin)
 {
 
-  return;
-
-
+	return;
 }
 
-void
-tile_source(cairo_t *cr, cairo_surface_t *surface,
-	    int x, int y, int width, int height, int margin, int top_margin)
+void tile_source(cairo_t *cr, cairo_surface_t *surface,
+				 int x, int y, int width, int height, int margin, int top_margin)
 {
 	cairo_pattern_t *pattern;
 	cairo_matrix_t matrix;
 	int i, fx, fy, vmargin;
 
 	cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-	pattern = cairo_pattern_create_for_surface (surface);
+	pattern = cairo_pattern_create_for_surface(surface);
 	cairo_pattern_set_filter(pattern, CAIRO_FILTER_NEAREST);
 	cairo_set_source(cr, pattern);
 	cairo_pattern_destroy(pattern);
 
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 4; i++)
+	{
 		fx = i & 1;
 		fy = i >> 1;
 
 		cairo_matrix_init_translate(&matrix,
-					    -x + fx * (128 - width),
-					    -y + fy * (128 - height));
+									-x + fx * (128 - width),
+									-y + fy * (128 - height));
 		cairo_pattern_set_matrix(pattern, &matrix);
 
 		if (fy)
@@ -179,9 +182,9 @@ tile_source(cairo_t *cr, cairo_surface_t *surface,
 			vmargin = top_margin;
 
 		cairo_rectangle(cr,
-				x + fx * (width - margin),
-				y + fy * (height - vmargin),
-				margin, vmargin);
+						x + fx * (width - margin),
+						y + fy * (height - vmargin),
+						margin, vmargin);
 		cairo_fill(cr);
 	}
 
@@ -197,7 +200,7 @@ tile_source(cairo_t *cr, cairo_surface_t *surface,
 	cairo_matrix_translate(&matrix, 0, -height + 128);
 	cairo_pattern_set_matrix(pattern, &matrix);
 	cairo_rectangle(cr, x + margin, y + height - margin,
-			width - 2 * margin, margin);
+					width - 2 * margin, margin);
 	cairo_fill(cr);
 
 	/* Left stretch */
@@ -206,19 +209,18 @@ tile_source(cairo_t *cr, cairo_surface_t *surface,
 	cairo_matrix_translate(&matrix, -x, -y - height / 2);
 	cairo_pattern_set_matrix(pattern, &matrix);
 	cairo_rectangle(cr, x, y + top_margin,
-			margin, height - margin - top_margin);
+					margin, height - margin - top_margin);
 	cairo_fill(cr);
 
 	/* Right stretch */
 	cairo_matrix_translate(&matrix, -width + 128, 0);
 	cairo_pattern_set_matrix(pattern, &matrix);
 	cairo_rectangle(cr, x + width - margin, y + top_margin,
-			margin, height - margin - top_margin);
+					margin, height - margin - top_margin);
 	cairo_fill(cr);
 }
 
-void
-rounded_rect(cairo_t *cr, int x0, int y0, int x1, int y1, int radius)
+void rounded_rect(cairo_t *cr, int x0, int y0, int x1, int y1, int radius)
 {
 	cairo_move_to(cr, x0, y0 + radius);
 	cairo_arc(cr, x0 + radius, y0 + radius, radius, M_PI, 3 * M_PI / 2);
@@ -239,7 +241,8 @@ load_cairo_surface(const char *filename)
 	void *data;
 
 	image = load_image(filename);
-	if (image == NULL) {
+	if (image == NULL)
+	{
 		return NULL;
 	}
 
@@ -249,22 +252,24 @@ load_cairo_surface(const char *filename)
 	stride = pixman_image_get_stride(image);
 
 	return cairo_image_surface_create_for_data(data, CAIRO_FORMAT_ARGB32,
-						   width, height, stride);
+											   width, height, stride);
 }
 
-void
-theme_set_background_source(struct theme *t, cairo_t *cr, uint32_t flags)
+void theme_set_background_source(struct theme *t, cairo_t *cr, uint32_t flags)
 {
 	cairo_pattern_t *pattern;
 
-	if (flags & THEME_FRAME_ACTIVE) {
-		//pattern = cairo_pattern_create_linear(16, 16, 16, 112);
+	if (flags & THEME_FRAME_ACTIVE)
+	{
+		// pattern = cairo_pattern_create_linear(16, 16, 16, 112);
 		pattern = cairo_pattern_create_rgba(0, 0, 0, 1);
-		//cairo_pattern_add_color_stop_rgb(pattern, 0.0, 1.0, 1.0, 1.0);
-		//cairo_pattern_add_color_stop_rgb(pattern, 0.2, 0.8, 0.8, 0.8);
+		// cairo_pattern_add_color_stop_rgb(pattern, 0.0, 1.0, 1.0, 1.0);
+		// cairo_pattern_add_color_stop_rgb(pattern, 0.2, 0.8, 0.8, 0.8);
 		cairo_set_source(cr, pattern);
 		cairo_pattern_destroy(pattern);
-	} else {
+	}
+	else
+	{
 		cairo_set_source_rgba(cr, 0.75, 0.75, 0.75, 1);
 	}
 }
@@ -283,20 +288,20 @@ theme_create(void)
 	t->width = 1;
 	t->titlebar_height = 27;
 	t->frame_radius = 0;
-	t->shadow = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 128, 128);
+	t->shadow = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 128, 128);
 	cr = cairo_create(t->shadow);
 	cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 	cairo_set_source_rgba(cr, 0, 0, 0, 1);
 	rounded_rect(cr, 32, 32, 96, 96, t->frame_radius);
 	cairo_fill(cr);
-	if (cairo_status (cr) != CAIRO_STATUS_SUCCESS)
+	if (cairo_status(cr) != CAIRO_STATUS_SUCCESS)
 		goto err_shadow;
 	cairo_destroy(cr);
 	if (blur_surface(t->shadow, 64) == -1)
 		goto err_shadow;
 
 	t->active_frame =
-		cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 128, 128);
+		cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 128, 128);
 	cr = cairo_create(t->active_frame);
 	cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
@@ -310,32 +315,31 @@ theme_create(void)
 	cairo_destroy(cr);
 
 	t->inactive_frame =
-		cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 128, 128);
+		cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 128, 128);
 	cr = cairo_create(t->inactive_frame);
 	cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 	theme_set_background_source(t, cr, 0);
 	rounded_rect(cr, 0, 0, 128, 128, t->frame_radius);
 	cairo_fill(cr);
 
-	if (cairo_status (cr) != CAIRO_STATUS_SUCCESS)
+	if (cairo_status(cr) != CAIRO_STATUS_SUCCESS)
 		goto err_inactive_frame;
 
 	cairo_destroy(cr);
 
 	return t;
 
- err_inactive_frame:
+err_inactive_frame:
 	cairo_surface_destroy(t->inactive_frame);
- err_active_frame:
+err_active_frame:
 	cairo_surface_destroy(t->active_frame);
- err_shadow:
+err_shadow:
 	cairo_surface_destroy(t->shadow);
 	free(t);
 	return NULL;
 }
 
-void
-theme_destroy(struct theme *t)
+void theme_destroy(struct theme *t)
 {
 	cairo_surface_destroy(t->active_frame);
 	cairo_surface_destroy(t->inactive_frame);
@@ -380,15 +384,12 @@ create_layout(cairo_t *cr, const char *title)
 */
 
 #define SHOW_TEXT(cr) \
-  cairo_show_text(cr, title)
+	cairo_show_text(cr, title)
 
-
-
-void
-theme_render_frame(struct theme *t,
-		   cairo_t *cr, int width, int height,
-		   const char *title, cairo_rectangle_int_t *title_rect,
-		   struct wl_list *buttons, uint32_t flags)
+void theme_render_frame(struct theme *t,
+						cairo_t *cr, int width, int height,
+						const char *title, cairo_rectangle_int_t *title_rect,
+						struct wl_list *buttons, uint32_t flags)
 {
 	cairo_surface_t *source;
 	int x, y, margin, top_margin;
@@ -400,10 +401,11 @@ theme_render_frame(struct theme *t,
 
 	if (flags & THEME_FRAME_MAXIMIZED)
 		margin = 0;
-	else {
+	else
+	{
 		render_shadow(cr, t->shadow,
-			      2, 2, width + 8, height + 8,
-			      64, 64);
+					  2, 2, width + 8, height + 8,
+					  64, 64);
 		margin = t->margin;
 	}
 
@@ -418,44 +420,45 @@ theme_render_frame(struct theme *t,
 		top_margin = t->width;
 
 	tile_source(cr, source,
-		    margin, margin,
-		    width - margin * 2, height - margin * 2,
-		    t->width, top_margin);
+				margin, margin,
+				width - margin * 2, height - margin * 2,
+				t->width, top_margin);
 
-	if (title || !wl_list_empty(buttons)) {
+	if (title || !wl_list_empty(buttons))
+	{
 
-		cairo_rectangle (cr, title_rect->x, title_rect->y,
-				 title_rect->width, title_rect->height);
+		cairo_rectangle(cr, title_rect->x, title_rect->y,
+						title_rect->width, title_rect->height);
 		cairo_clip(cr);
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
-    /*
-#ifdef HAVE_PANGO
-		PangoLayout *title_layout;
-		PangoRectangle logical;
+		/*
+	#ifdef HAVE_PANGO
+			PangoLayout *title_layout;
+			PangoRectangle logical;
 
-		title_layout = create_layout(cr, title);
+			title_layout = create_layout(cr, title);
 
-		pango_layout_get_pixel_extents (title_layout, NULL, &logical);
-		text_width = MIN(title_rect->width, logical.width);
-		text_height = logical.height;
-		if (text_width < logical.width)
-		  pango_layout_set_width (title_layout, text_width * PANGO_SCALE);
+			pango_layout_get_pixel_extents (title_layout, NULL, &logical);
+			text_width = MIN(title_rect->width, logical.width);
+			text_height = logical.height;
+			if (text_width < logical.width)
+			  pango_layout_set_width (title_layout, text_width * PANGO_SCALE);
 
-#else
-    */
+	#else
+		*/
 		cairo_text_extents_t extents;
 		cairo_font_extents_t font_extents;
 
 		cairo_select_font_face(cr, "sans",
-				       CAIRO_FONT_SLANT_NORMAL,
-				       CAIRO_FONT_WEIGHT_BOLD);
+							   CAIRO_FONT_SLANT_NORMAL,
+							   CAIRO_FONT_WEIGHT_BOLD);
 		cairo_set_font_size(cr, 18);
 		cairo_text_extents(cr, title, &extents);
-		cairo_font_extents (cr, &font_extents);
+		cairo_font_extents(cr, &font_extents);
 		text_width = extents.width;
 		text_height = font_extents.descent - font_extents.ascent;
-//#endif
+		// #endif
 
 		x = (width - text_width) / 2;
 		y = margin + (t->titlebar_height - text_height) / 2;
@@ -464,17 +467,20 @@ theme_render_frame(struct theme *t,
 		else if (x + text_width > (title_rect->x + title_rect->width))
 			x = (title_rect->x + title_rect->width) - text_width;
 
-		if (flags & THEME_FRAME_ACTIVE) {
-			cairo_move_to(cr, x + 1, y  + 1);
+		if (flags & THEME_FRAME_ACTIVE)
+		{
+			cairo_move_to(cr, x + 1, y + 1);
 			cairo_set_source_rgb(cr, 1, 1, 1);
 			SHOW_TEXT(cr);
 
-      //Shadow
+			// Shadow
 
-			///cairo_move_to(cr, x, y);
-			//cairo_set_source_rgb(cr, 0, 0, 0);
-			//SHOW_TEXT(cr);
-		} else {
+			/// cairo_move_to(cr, x, y);
+			// cairo_set_source_rgb(cr, 0, 0, 0);
+			// SHOW_TEXT(cr);
+		}
+		else
+		{
 			cairo_move_to(cr, x, y);
 			cairo_set_source_rgb(cr, 0.4, 0.4, 0.4);
 			SHOW_TEXT(cr);
@@ -484,15 +490,18 @@ theme_render_frame(struct theme *t,
 
 enum theme_location
 theme_get_location(struct theme *t, int x, int y,
-				int width, int height, int flags)
+				   int width, int height, int flags)
 {
 	int vlocation, hlocation, location;
 	int margin, top_margin, grip_size;
 
-	if (flags & THEME_FRAME_MAXIMIZED) {
+	if (flags & THEME_FRAME_MAXIMIZED)
+	{
 		margin = 0;
 		grip_size = 0;
-	} else {
+	}
+	else
+	{
 		margin = t->margin;
 		grip_size = 8;
 	}
@@ -528,7 +537,7 @@ theme_get_location(struct theme *t, int x, int y,
 	if (location & THEME_LOCATION_EXTERIOR)
 		location = THEME_LOCATION_EXTERIOR;
 	if (location == THEME_LOCATION_INTERIOR &&
-	    y < margin + top_margin)
+		y < margin + top_margin)
 		location = THEME_LOCATION_TITLEBAR;
 	else if (location == THEME_LOCATION_INTERIOR)
 		location = THEME_LOCATION_CLIENT_AREA;
